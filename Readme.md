@@ -20,7 +20,7 @@ This repository contains code for:
 
 ```bash
 git clone https://github.com/CSL9969/EN4554_LLMs_tutorial.git
-cd <EN4554_LLMs_tutorial>
+cd EN4554_LLMs_tutorial
 ```
 
 ### 2. Create and activate a virtual environment
