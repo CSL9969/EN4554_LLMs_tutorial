@@ -15,6 +15,9 @@ DOCS_DIR = "/home/chamindu/EN4554_LLMs_tutorial/docs"
 MAX_ITERATIONS = 5
 
 SYSTEM_PROMPT = """You are an assistant that can use tools to answer questions.
+If no tool is needed, answer the question directly in the following format.
+Thought: <your reasoning>
+Final Answer: <the answer to the user's question>
 
 Available tools:
 - search_documents(query): Searches a knowledge base and returns relevant passages.
@@ -25,6 +28,15 @@ To use a tool, respond in EXACTLY this format and then stop:
 Thought: <your reasoning>
 Action: <tool_name>
 Action Input: <input to the tool>
+
+Examples:
+> Thought: I need to find information about LLMs.
+> Action: search_documents
+> Action Input: What are LLMs?
+
+>Thought: I need to calculate 2 + 2.
+> Action: calculator
+> Action Input: 2 + 2
 
 Once you receive an Observation with the tool's result, continue reasoning in the
 same format, using more tool calls if needed. When you have enough information,
