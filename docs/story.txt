@@ -1,0 +1,97 @@
+Transformers and Modern Generative AI
+
+Introduction
+
+The Transformer is a neural network architecture introduced in 2017 in the research paper "Attention Is All You Need" by Ashish Vaswani and colleagues. The architecture was originally developed for sequence-to-sequence tasks such as machine translation, but it later became the foundation of many modern natural language processing (NLP) systems and large language models (LLMs). Unlike earlier recurrent neural networks (RNNs), Transformers do not require processing a sequence strictly one token at a time. Instead, they can process many tokens in parallel using an attention mechanism.
+
+The Transformer architecture is based primarily on self-attention, feed-forward neural networks, residual connections, layer normalization, and positional information. These components allow the model to represent relationships between different tokens in a sequence and to process long sequences more effectively than traditional recurrent architectures.
+
+Self-Attention
+
+Self-attention is the central mechanism of the Transformer architecture. Its purpose is to allow each token in a sequence to determine which other tokens are important when constructing its representation. For example, consider the sentence "The student placed the book on the table because it was heavy." To understand what "it" refers to, a model needs to consider relationships between different words in the sentence. Self-attention provides a mechanism for modeling such relationships.
+
+For each input token, the Transformer generates three vectors called a query, a key, and a value. These are commonly represented as Q, K, and V. The attention score between a query and a key is calculated using their dot product. The scores are scaled by the square root of the dimensionality of the key vectors and passed through a softmax function. The resulting weights are then used to compute a weighted combination of the value vectors.
+
+The scaled dot-product attention equation is:
+
+Attention(Q, K, V) = softmax(QK^T / sqrt(d_k))V
+
+where d_k is the dimensionality of the key vectors. Scaling by sqrt(d_k) helps prevent the dot products from becoming excessively large, which could cause the softmax function to produce extremely concentrated probability distributions.
+
+Multi-Head Attention
+
+Transformers do not normally use a single attention operation. Instead, they use multi-head attention. In multi-head attention, the input is projected into several different query, key, and value spaces. Each attention head can learn to focus on different relationships within the sequence.
+
+For example, one attention head might learn relationships between a pronoun and the noun it refers to, while another head might focus on syntactic relationships or relationships between words that are far apart in the sentence. The outputs of the different attention heads are concatenated and passed through another linear transformation.
+
+If a Transformer has h attention heads and each head has a smaller representation dimension, the total representation dimension can remain approximately constant while allowing the model to learn multiple types of relationships.
+
+Encoder and Decoder
+
+The original Transformer architecture contains an encoder and a decoder. The encoder processes the input sequence and produces contextual representations. The decoder generates the output sequence using information from the encoder as well as information from previously generated tokens.
+
+The encoder consists of a stack of repeated encoder layers. Each encoder layer contains a multi-head self-attention sublayer followed by a position-wise feed-forward network. Residual connections and layer normalization are used around these components.
+
+The decoder also contains self-attention and feed-forward components, but it additionally contains cross-attention. Cross-attention allows the decoder to attend to representations produced by the encoder.
+
+Modern language models do not necessarily use the complete original encoder-decoder architecture. Models such as GPT primarily use decoder-only Transformers, while models such as BERT primarily use encoder-only Transformers. Encoder-decoder architectures are commonly used for tasks such as text-to-text transformation and sequence-to-sequence generation.
+
+Positional Information
+
+Self-attention by itself does not inherently know the order of tokens in a sequence. Therefore, Transformer architectures require positional information. The original Transformer paper used sinusoidal positional encodings.
+
+For a position pos and dimension i, sinusoidal positional encoding uses sine and cosine functions with different frequencies. This allows the model to distinguish between different token positions.
+
+Later Transformer models introduced alternative approaches, including learned positional embeddings and relative or rotary positional representations. Rotary Position Embeddings, commonly abbreviated as RoPE, encode positional information by rotating query and key representations. RoPE has become particularly common in modern large language models.
+
+BERT and GPT
+
+BERT and GPT demonstrate two important directions in the development of Transformer-based language models.
+
+BERT, which stands for Bidirectional Encoder Representations from Transformers, was introduced by researchers at Google in 2018. BERT uses an encoder-only Transformer architecture. It was trained using objectives including masked language modeling, where some tokens are hidden and the model learns to predict the missing tokens. Because BERT processes context from both directions, it is particularly useful for understanding-oriented NLP tasks.
+
+GPT, or Generative Pre-trained Transformer, represents the decoder-only approach. GPT models are trained to predict the next token given previous tokens. This autoregressive objective makes them naturally suited to text generation. Later GPT-style models became increasingly large and capable, eventually forming the basis for modern generative AI assistants.
+
+Large Language Models
+
+A large language model is generally a neural network trained on a large quantity of text or other data to learn statistical and semantic patterns. Transformer architectures are particularly suitable for LLMs because attention allows the model to represent relationships between tokens over relatively long contexts.
+
+Training an LLM typically involves several stages. During pretraining, the model learns from a large corpus using an objective such as next-token prediction. The pretrained model can then be adapted through supervised fine-tuning, instruction tuning, preference optimization, or other techniques.
+
+An important distinction exists between model parameters and context. Parameters are learned during training and represent information encoded in the model weights. The context is the sequence of tokens provided to the model during inference. Retrieval-augmented generation, or RAG, provides an additional mechanism for giving a model relevant external information without modifying its parameters.
+
+Retrieval-Augmented Generation
+
+RAG combines information retrieval with language generation. Instead of relying entirely on information stored in model parameters, a RAG system retrieves relevant documents or document chunks and places them into the model's context before generating an answer.
+
+A typical RAG pipeline contains several stages. First, documents are collected and divided into smaller chunks. Each chunk is converted into a vector representation called an embedding. These embeddings are stored in a vector database or another similarity-search system.
+
+When a user asks a question, the question is also converted into an embedding. The retrieval system compares the query embedding with stored document embeddings and identifies the most relevant chunks. These chunks are then included in a prompt sent to the language model.
+
+RAG can be useful when the information being queried changes frequently or when an organization needs the model to answer questions about private documents. For example, a university could create a RAG system containing course manuals, laboratory instructions, and academic regulations. A student could then ask a question and receive an answer based on the retrieved university documents.
+
+Chunking is an important design decision in RAG systems. If chunks are too small, important context may be lost. If chunks are too large, retrieval may become less precise and the model may receive unnecessary information. Common strategies include fixed-size chunking, recursive text splitting, semantic chunking, and structure-aware chunking.
+
+Embeddings and Similarity Search
+
+Embedding models transform text into numerical vectors. Texts with similar meanings should ideally have embeddings that are close to one another in vector space. Similarity can be measured using metrics such as cosine similarity or Euclidean distance.
+
+For example, the sentences "What is a Transformer?" and "Explain the Transformer neural network architecture" should ideally have similar embeddings even though they use different words.
+
+Vector databases can efficiently search large collections of embeddings. Examples of technologies used for vector search include FAISS, Milvus, Qdrant, Weaviate, and other database systems with vector-search capabilities.
+
+Limitations of Transformers
+
+Despite their success, Transformers have several limitations. Computational requirements can become large as sequence length increases. Standard self-attention has computational complexity that grows approximately quadratically with sequence length because every token can potentially attend to every other token.
+
+Large language models can also generate incorrect information, commonly called hallucinations. RAG can reduce this problem by providing relevant external information, but retrieval errors can still lead to incorrect answers. A model may also misunderstand or ignore retrieved information.
+
+Another limitation is that Transformer models can require substantial computational resources for training and inference. Techniques such as quantization, knowledge distillation, pruning, parameter-efficient fine-tuning, and efficient attention mechanisms can reduce computational requirements.
+
+Conclusion
+
+The Transformer architecture fundamentally changed NLP by replacing recurrence as the dominant mechanism for modeling sequences with attention-based computation. The introduction of self-attention made it possible to efficiently model relationships between tokens and enabled significant advances in language understanding and generation.
+
+Modern systems such as BERT, GPT-style models, and many other LLMs are based on Transformer architectures or significant extensions of them. At the same time, techniques such as embeddings, vector search, and retrieval-augmented generation allow these models to interact with external knowledge sources.
+
+For practical AI systems, the Transformer itself is only one part of a larger pipeline. Model architecture, tokenization, training objectives, inference strategies, retrieval systems, embeddings, context management, and evaluation all contribute to the final performance of a generative AI application.
