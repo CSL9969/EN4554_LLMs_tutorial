@@ -5,7 +5,7 @@ This repository contains code for:
 - LLM inference using vLLM
 - Manually hosting models via Flask
 - Retrieval-Augmented Generation (RAG)
-- Agentic pipelines (LangChain / LangGraph)
+- Agentic pipelines
 - Full fine-tuning and LoRA/QLoRA fine-tuning
 
 ## Requirements
