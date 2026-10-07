@@ -1,20 +1,40 @@
 """The module loads the model and the tokenizer."""
 
-from transformers import AutoTokenizer, AutoModelForCausalLM
+import argparse
+
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
 
 class ChatBot:
     """The class loads the model and the tokenizer."""
 
-    def __init__(self, model_name: str | None = None):
+    def __init__(self, model_name: str | None = None, load_in_4bit: bool = False):
         """Initializes the ChatBot class.
 
         Args:
             model_name (str | None): The name of the model to load.
+            load_in_4bit (bool): If True, loads the model in 4-bit (NF4) using
+                bitsandbytes to reduce memory. Defaults to False (16-bit).
         """
         model_name = "Qwen/Qwen3.5-0.8B" if model_name is None else model_name
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModelForCausalLM.from_pretrained(model_name)
+
+        quantization_config = None
+        if load_in_4bit:
+            quantization_config = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_compute_dtype=torch.bfloat16,
+            )
+
+        # Load the whole model on the GPU (no CPU offloading).
+        self.model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch.bfloat16,
+            quantization_config=quantization_config,
+            device_map="cuda",
+        )
 
         self.chat_history = [
             {"role": "system", "content": "You are a helpful assistant."},
@@ -74,7 +94,11 @@ class ChatBot:
         )
 
 if __name__ == "__main__":
-    bot = ChatBot()
+    parser = argparse.ArgumentParser(description="Chat with a transformers model.")
+    parser.add_argument("--load_in_4bit", action="store_true", help="Load the model in 4-bit (requires a CUDA GPU).")
+    args = parser.parse_args()
+
+    bot = ChatBot(load_in_4bit=args.load_in_4bit)
     while True:
         user_input = input("User: ")
         if user_input.lower() in ["exit", "quit"]:

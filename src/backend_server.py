@@ -1,22 +1,50 @@
 """A backend that loads a transformers model once and serves it over HTTP."""
 
+import argparse
+
 import torch
 from flask import Flask, jsonify, request
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 MODEL_NAME = "Qwen/Qwen3.5-0.8B"
 
 app = Flask(__name__)
 
-print(f"Loading {MODEL_NAME}...")
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-model = AutoModelForCausalLM.from_pretrained(
-    MODEL_NAME,
-    torch_dtype=torch.bfloat16,
-    device_map="auto",
-)
-model.eval()
-print("Model loaded. Server ready.")
+tokenizer = None
+model = None
+
+
+def load_model(model_name: str = MODEL_NAME, load_in_4bit: bool = False):
+    """Loads the tokenizer and model.
+
+    Args:
+        model_name (str): The name of the model to load.
+        load_in_4bit (bool): If True, loads the model in 4-bit (NF4) using bitsandbytes
+            to reduce GPU memory. Defaults to False (bf16).
+
+    Returns:
+        tuple: The loaded (tokenizer, model).
+    """
+    print(f"Loading {model_name} ({'4-bit' if load_in_4bit else 'bf16'})...")
+    tok = AutoTokenizer.from_pretrained(model_name)
+
+    quantization_config = None
+    if load_in_4bit:
+        quantization_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16,
+        )
+
+    mdl = AutoModelForCausalLM.from_pretrained(
+        model_name,
+        torch_dtype=torch.bfloat16,
+        quantization_config=quantization_config,
+        device_map="cuda",  # load the whole model on the GPU (no CPU offloading)
+    )
+    mdl.eval()
+    print("Model loaded. Server ready.")
+    return tok, mdl
 
 
 @app.route("/generate", methods=["POST"])
@@ -55,4 +83,9 @@ def generate():
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Serve a transformers model over HTTP.")
+    parser.add_argument("--load_in_4bit", action="store_true", help="Load the model in 4-bit to reduce GPU memory.")
+    args = parser.parse_args()
+
+    tokenizer, model = load_model(load_in_4bit=args.load_in_4bit)
     app.run(host="0.0.0.0", port=8000)
