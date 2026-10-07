@@ -21,7 +21,7 @@ from peft import LoraConfig, get_peft_model
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from trl import SFTConfig, SFTTrainer
 
-MODEL_NAME = "Qwen/Qwen3.5-2B"
+MODEL_NAME = "Qwen/Qwen3.5-0.8B"
 
 
 def load_model_and_tokenizer(model_name: str):
@@ -70,7 +70,7 @@ def formatting_func(example: dict, tokenizer) -> str:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="LoRA fine-tune Qwen3.5-2B on a chat dataset.")
+    parser = argparse.ArgumentParser(description="LoRA fine-tune Qwen3.5-0.8B on a chat dataset.")
     parser.add_argument("--model_name", default=MODEL_NAME)
     parser.add_argument("--dataset", required=True, help="Path to a JSONL file with a 'messages' field per line.")
     parser.add_argument("--output_dir", default="./qwen-lora-out")

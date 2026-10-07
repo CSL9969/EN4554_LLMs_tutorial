@@ -22,7 +22,7 @@ from datasets import load_dataset
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from trl import SFTConfig, SFTTrainer
 
-MODEL_NAME = "Qwen/Qwen3.5-2B"
+MODEL_NAME = "Qwen/Qwen3.5-0.8B"
 DEFAULT_DATASET = "tatsu-lab/alpaca"
 
 
@@ -70,7 +70,7 @@ def formatting_func(example: dict, tokenizer) -> str:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Full fine-tune Qwen3.5-2B.")
+    parser = argparse.ArgumentParser(description="Full fine-tune Qwen3.5-0.8B.")
     parser.add_argument("--model_name", default=MODEL_NAME)
     parser.add_argument("--dataset", default=None, help="Path to a JSONL file with a 'messages' field per line. Defaults to tatsu-lab/alpaca.")
     parser.add_argument("--output_dir", default="./qwen-full-out")

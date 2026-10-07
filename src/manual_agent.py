@@ -9,7 +9,7 @@ from openai import OpenAI
 
 from rag_retriever import VectorStore
 
-MODEL_NAME = "Qwen/Qwen3.5-2B"
+MODEL_NAME = "Qwen/Qwen3.5-0.8B"
 BASE_URL = "http://localhost:8000/v1"
 DOCS_DIR = "/home/chamindu/EN4554_LLMs_tutorial/docs"
 MAX_ITERATIONS = 5

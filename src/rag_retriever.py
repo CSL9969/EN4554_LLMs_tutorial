@@ -83,24 +83,24 @@ class VectorStore:
 
 if __name__ == "__main__":
 
-    # store = VectorStore()
-    # store.build_from_docs("/home/chamindu/EN4554_LLMs_tutorial/docs")
+    store = VectorStore()
+    store.build_from_docs("/home/chamindu/EN4554_LLMs_tutorial/docs")
 
-    # query = "What is attention?"
-    # results = store.retrieve(query, k=4)
+    query = "What is attention?"
+    results = store.retrieve(query, k=4)
 
-    # print(f"\nTop {len(results)} result(s) for: {query!r}\n")
-    # for i, doc in enumerate(results, start=1):
-    #     source = doc.metadata.get("source", "unknown")
-    #     print(f"--- Result {i} (source: {source}) ---")
-    #     print(doc.page_content.strip())
-    #     print()
+    print(f"\nTop {len(results)} result(s) for: {query!r}\n")
+    for i, doc in enumerate(results, start=1):
+        source = doc.metadata.get("source", "unknown")
+        print(f"--- Result {i} (source: {source}) ---")
+        print(doc.page_content.strip())
+        print()
 
-    chunks = get_chunks("/home/chamindu/EN4554_LLMs_tutorial/docs")
+    # chunks = get_chunks("/home/chamindu/EN4554_LLMs_tutorial/docs")
 
-    for i, chunk in enumerate(chunks, start=1):
-        print(f"Chunk {i} \n\n")
-        print(chunk.page_content)
-        print("\n\n")
-        if i == 10:
-            break
+    # for i, chunk in enumerate(chunks, start=1):
+    #     print(f"Chunk {i} \n\n")
+    #     print(chunk.page_content)
+    #     print("\n\n")
+    #     if i == 10:
+    #         break

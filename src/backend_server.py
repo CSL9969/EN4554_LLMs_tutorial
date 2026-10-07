@@ -4,7 +4,7 @@ import torch
 from flask import Flask, jsonify, request
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-MODEL_NAME = "Qwen/Qwen3.5-2B"
+MODEL_NAME = "Qwen/Qwen3.5-0.8B"
 
 app = Flask(__name__)
 

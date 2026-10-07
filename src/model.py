@@ -12,7 +12,7 @@ class ChatBot:
         Args:
             model_name (str | None): The name of the model to load.
         """
-        model_name = "Qwen/Qwen3.5-2B" if model_name is None else model_name
+        model_name = "Qwen/Qwen3.5-0.8B" if model_name is None else model_name
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForCausalLM.from_pretrained(model_name)
 
@@ -75,5 +75,11 @@ class ChatBot:
 
 if __name__ == "__main__":
     bot = ChatBot()
-    print(bot.generate_response("What is the Capital of France?"))
-    print(bot.get_formatted_input())
+    while True:
+        user_input = input("User: ")
+        if user_input.lower() in ["exit", "quit"]:
+            break
+        response = bot.generate_response(user_input)
+        print(f"Bot: {response}")
+    # print(bot.generate_response("What is the Capital of France?"))
+    # print(bot.get_formatted_input())

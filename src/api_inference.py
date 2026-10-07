@@ -6,7 +6,7 @@ from openai import OpenAI
 class ChatBot:
     """Chat client that hits the local vLLM server."""
 
-    def __init__(self, model_name: str = "Qwen/Qwen3.5-2B", base_url: str = "http://localhost:8000/v1"):
+    def __init__(self, model_name: str = "Qwen/Qwen3.5-0.8B", base_url: str = "http://localhost:8000/v1"):
         """Initializes the ChatBot class.
 
         Args:
